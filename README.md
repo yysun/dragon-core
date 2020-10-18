@@ -3,7 +3,10 @@
 
 Dragon Core is a simple and strong typed ORM tool for .NET Core.
 
-> It is based on the [Dragon](http://github.com/yysun/dragon) ORM tool for .NET framework.
+> It is a port of the [Dragon](http://github.com/yysun/dragon) ORM tool for .NET framework.
+
+How to Use
+==========
 
 ```C#
 Database database = Database.Open(<...connection string...>);
