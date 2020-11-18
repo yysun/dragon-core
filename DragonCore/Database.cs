@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 
 namespace Dragon
 {
-    public class Database 
+    public class Database
     {
         public static Database Open(string name)
         {
@@ -19,7 +19,7 @@ namespace Dragon
         public Database(string connectionString)
         {
             this.connectionString = connectionString;
-        } 
+        }
 
         public SqlCommand CreateCommand(string name, object parameters, SqlConnection connection)
         {
@@ -32,7 +32,7 @@ namespace Dragon
                 foreach (var property in properties)
                 {
                     //FastPropertyInfo needs update to support anonymous class
-                    //cmd.Parameters.AddWithValue("@" + property.Name, 
+                    //cmd.Parameters.AddWithValue("@" + property.Name,
                     //    property.GetValue(parameters, null) ?? DBNull.Value);
 
                     cmd.Parameters.AddWithValue("@" + property.Name,
@@ -86,7 +86,7 @@ namespace Dragon
                 return command.ExecuteNonQuery();
             }
         }
-        
+
         public object QueryValue(string name, object parameters = null)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -136,7 +136,7 @@ namespace Dragon
                 var item3 = CreateObjects<V>(reader);
                 return Tuple.Create<IEnumerable<T>, IEnumerable<U>, IEnumerable<V>>(item1, item2, item3);
             }
-        } 
+        }
         #endregion
 
         #region Property Info Cache

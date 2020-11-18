@@ -5,6 +5,12 @@ Dragon Core is a simple and strong typed ORM tool for .NET Core.
 
 > It is a port of the [Dragon](http://github.com/yysun/dragon) ORM tool for .NET framework.
 
+What's New
+==========
+
+* V 2.1 Supports .NET 5
+* V 2.0 Supports .NET Core 3.1
+
 How to Use
 ==========
 
@@ -35,6 +41,18 @@ Assert.AreEqual(1, users.ToList()[0].UserId);
 Assert.AreEqual(0, members.Count());
 Assert.AreEqual("Sysadmin", roles.ToList()[0].RoleName);
 ```
+
+How to Test
+===========
+
+## Create SQL Server Using Docker
+```
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<YourStrong@Passw0rd>" -p 1433:1433 --name sql -h sql -d mcr.microsoft.com/mssql/server:2019-latest
+```
+
+## Connect to Existing SQL Server / SQL Server LocalDB
+
+Change the connection string in DragonCore.Tests/DatabaseTest.cs
 
 Source Code
 ===========

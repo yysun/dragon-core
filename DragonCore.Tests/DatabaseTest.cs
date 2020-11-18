@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using Dragon;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,10 +28,10 @@ namespace DragonCore.Tests
 			}
 		}
 
-		static string connectionString = "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=test;Integrated Security=True;";
+		static string connectionString = "Server=127.0.0.1;Database=test;User Id=sa;Password=<YourStrong@Passw0rd>;";
 
 		#region Additional test attributes
-		// 
+		//
 		//You can use the following additional attributes as you write your tests:
 		//
 		//Use ClassInitialize to run code before running the first test in the class
@@ -46,7 +44,7 @@ namespace DragonCore.Tests
 			//	appData = Environment.CurrentDirectory;
 			//	AppDomain.CurrentDomain.SetData("DataDirectory", appData);
 			//}
-			//filename = System.IO.Path.Combine(appData, "Test.mdf"); 
+			//filename = System.IO.Path.Combine(appData, "Test.mdf");
 			//if (!System.IO.File.Exists(filename)) CreateSqlExpressDatabase(filename);
 
 			CreateSqlExpressDatabase("test");
@@ -58,7 +56,7 @@ namespace DragonCore.Tests
 		public static void CreateSqlExpressDatabase(string databaseName)
 		{
 			bool new_db = false;
-			using (var connection = new SqlConnection("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=master;" + "Integrated Security=true"))
+			using (var connection = new SqlConnection("Server=127.0.0.1;Database=master;" + "User Id=sa;Password=<YourStrong@Passw0rd>"))
 			{
 				connection.Open();
 				using (var command = new SqlCommand($"SELECT db_id('{databaseName}')", connection))
@@ -110,7 +108,7 @@ namespace DragonCore.Tests
 
 			var db = Database.Open(connectionString);
 			db.Execute(sql);
-			db.Execute(@"				
+			db.Execute(@"
 				CREATE PROCEDURE [dbo].[GetAllUserInfo] AS
 				BEGIN
 					SET NOCOUNT ON;
@@ -121,12 +119,6 @@ namespace DragonCore.Tests
 		}
 
 		#endregion
-
-
-		//"C:\Program Files\Microsoft SQL Server\130\Tools\Binn\SqlLocalDB.exe" stop MSSQLLocalDB
-		//"C:\Program Files\Microsoft SQL Server\130\Tools\Binn\SqlLocalDB.exe" delete MSSQLLocalDB
-		//"C:\Program Files\Microsoft SQL Server\130\Tools\Binn\SqlLocalDB.exe" create MSSQLLocalDB
-		//"C:\Program Files\Microsoft SQL Server\130\Tools\Binn\SqlLocalDB.exe" start MSSQLLocalDB
 
 		Database database = Database.Open(connectionString);
 
