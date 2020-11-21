@@ -17,7 +17,11 @@ namespace DragonCore.Tests
     {
         public string FirstName { get; init; }
         public string LastName { get; init; }
+
     }
+
+
+    public record PersonPositionalRecord(string FirstName, string LastName);
 
     [TestClass()]
     public class ReflectionTest
@@ -49,6 +53,30 @@ namespace DragonCore.Tests
             var newobj = System.Activator.CreateInstance<PersonRecord>();
             SetValue(properties, newobj, "FirstName", "Hello");
             SetValue(properties, newobj, "LastName", "World");
+            Assert.AreEqual("Hello", newobj.FirstName);
+            Assert.AreEqual("World", newobj.LastName);
+        }
+
+        [TestMethod]
+        public void FastProperty_Should_Work_With_Positional_Record()
+        {
+            var t0 = typeof(Person);
+            var t1 = typeof(PersonRecord);
+            var t2 = typeof(PersonPositionalRecord);
+
+            var cinfo = t0.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            Assert.IsNotNull(cinfo);
+            Assert.AreEqual(0, cinfo[0].GetParameters().Length);
+
+            cinfo = t1.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            Assert.IsNotNull(cinfo);
+            Assert.AreEqual(0, cinfo[0].GetParameters().Length);
+
+            cinfo = t2.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            Assert.IsNotNull(cinfo);
+            Assert.AreEqual(2, cinfo[0].GetParameters().Length);
+
+            var newobj = (PersonPositionalRecord) System.Activator.CreateInstance(t2, new Object[]{"Hello", "World"});
             Assert.AreEqual("Hello", newobj.FirstName);
             Assert.AreEqual("World", newobj.LastName);
         }

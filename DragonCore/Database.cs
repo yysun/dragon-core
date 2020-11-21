@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 
 namespace Dragon
 {
@@ -49,28 +50,36 @@ namespace Dragon
         private IEnumerable<T> CreateObjects<T>(SqlDataReader reader)
         {
             IList<T> al = new List<T>();
+            Type EntityType = typeof(T);
+            var properties = propertyInfoCache[EntityType];
+            var cinfos = EntityType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+            var has_paramterless_ctor = Array.Exists(cinfos, c=>c.GetParameters().Length == 0);
+
             while (reader.Read())
             {
-                Type EntityType = typeof(T);
-                //var properties = EntityType.GetProperties();
-                var properties = propertyInfoCache[typeof(T)];
-                T newobj = (T)System.Activator.CreateInstance(EntityType);
-                for (int i = 0; i < reader.FieldCount; i++)
+                T newobj;
+                if (has_paramterless_ctor)
                 {
-                    string fieldName = reader.GetName(i);
-                    object propertyObject = reader[fieldName];
-                    if (propertyObject is System.DBNull) continue;
-
-                    //if (properties.Any(p => p.Name == fieldName))
-                    //{
-                    //    object[] parameter = new object[1] { propertyObject };
-                    //    EntityType.InvokeMember(fieldName, BindingFlags.Default | BindingFlags.SetProperty,
-                    //        null, newobj, parameter,
-                    //        System.Globalization.CultureInfo.InvariantCulture);
-                    //}
-
-                    var pinfo = properties.Where(p=>p.Name == fieldName).FirstOrDefault();
-                    if(pinfo!=null) pinfo.SetValue(newobj, propertyObject, null);
+                    newobj = (T)System.Activator.CreateInstance(EntityType);
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        string fieldName = reader.GetName(i);
+                        object propertyObject = reader[i];
+                        if (propertyObject is System.DBNull) continue;
+                        var pinfo = properties.Where(p => p.Name == fieldName).FirstOrDefault();
+                        if (pinfo != null) pinfo.SetValue(newobj, propertyObject, null);
+                    }
+                }
+                else
+                {
+                    IList<object> pl = new List<object>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        object propertyObject = reader[i];
+                        if (propertyObject is System.DBNull) continue;
+                        pl.Add(propertyObject);
+                    }
+                    newobj = (T)System.Activator.CreateInstance(EntityType, pl.ToArray());
                 }
                 al.Add(newobj);
             }

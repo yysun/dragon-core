@@ -180,6 +180,24 @@ namespace DragonCore.Tests
 			Assert.AreEqual(0, members.Count());
 			Assert.AreEqual("Sysadmin", roles.ToList()[0].RoleName);
 		}
+
+		[TestMethod]
+		public void TestRecord()
+		{
+			var users = database.Query<TestUserRecord>("select UserId, Email from UserProfile").ToList();
+			Assert.AreEqual(1, users[0].UserId);
+			Assert.AreEqual(2, users[1].UserId);
+			Assert.AreEqual("user@company.com", users[1].Email);
+		}
+
+		[TestMethod]
+		public void TestPositionalRecord()
+		{
+			var users = database.Query<TestUserPRecord>("select UserId, Email from UserProfile").ToList();
+			Assert.AreEqual(1, users[0].UserId);
+			Assert.AreEqual(2, users[1].UserId);
+			Assert.AreEqual("user@company.com", users[1].Email);
+		}
 	}
 
 	#region Test Classes
@@ -201,5 +219,15 @@ namespace DragonCore.Tests
 		public int UserId { get; set; }
 		public string RoleName { get; set; }
 	}
-	#endregion
+  #endregion
+
+  #region Test Classes
+  public record TestUserPRecord(int UserId, string Email);
+
+	public record TestUserRecord
+	{
+		public int UserId { get; init; }
+		public string Email { get; init; }
+	}
+  #endregion
 }
