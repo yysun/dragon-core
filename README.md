@@ -8,7 +8,8 @@ Dragon Core is a strong typed ORM tool for .NET 5.
 What's New
 ==========
 
-* V 2.1 Supports .NET 5, C# 9 records
+* V 2.2 Supports .NET 5, C# 9 positional record types
+* V 2.1 Supports .NET 5, C# 9 record types
 * V 2.0 Supports .NET Core 3.1
 
 Quick Start
@@ -22,7 +23,13 @@ dotnet add package DragonCore
 
 ## Define C# Data Types
 
-You can Use records from C# 9
+You can use positional record type from C# 9
+
+```csharp
+public record User (int UserId, string Email);
+```
+
+Or use record type
 
 ```C#
 public record User

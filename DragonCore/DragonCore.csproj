@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/yysun/dragon-core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageId>DragonCore</PackageId>
-    <Version>2.1.0</Version>
+    <Version>2.2.0</Version>
     <Description>Dragon Core is a simple and strong typed ORM tool for .NET Core.</Description>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>ORM, SQL Server</PackageTags>
